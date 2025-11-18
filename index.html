@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Asia Airlines — путешествуй с нами</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+:root{
+  --main: #800020;
+  --main-2: #4b0016;
+  --accent: #f8d210;
+  --bg: #faf7f7;
+  --card: #ffffff;
+  --text: #1a1a1a;
+  --muted: #666666;
+  --container:1200px;
+  --radius:12px;
+  --ease: 260ms cubic-bezier(.2,.9,.2,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto, "Helvetica Neue", Arial;line-height:1.5;color:var(--text);background:var(--bg);scroll-behavior:smooth}
+body{font-weight:400;min-height:100vh}
+
+.container{max-width:var(--container);margin:0 auto;padding:0 20px}
+
+/* HEADER STYLES */
+header{
+  background:linear-gradient(90deg,var(--main),var(--main-2));
+  color:#fff;position:sticky;top:0;z-index:1000;box-shadow:0 2px 10px rgba(0,0,0,0.15)
+}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 20px;flex-wrap:wrap}
+.logo{font-weight:700;font-size:1.6rem;letter-spacing:.2px;font-family:'Playfair Display',serif}
+.logo span{color:var(--accent)}
+
+/* MAIN NAVIGATION */
+.site-nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.site-nav a{color:#1a1a1a;text-decoration:none;padding:8px 16px;border-radius:8px;font-weight:500;font-family:'Inter',sans-serif;transition:all 0.3s ease;background:rgba(255,255,255,0.9)}
+.site-nav a:hover{background:rgba(255,255,255,1);transform:translateY(-2px);box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+
+/* AUTH SECTION IN HEADER */
+.header-auth{display:flex;align-items:center;gap:12px;margin-left:auto}
+.auth-buttons{display:flex;gap:8px}
+.auth-btn{background:rgba(255,255,255,0.15);color:white;border:1px solid rgba(255,255,255,0.3);padding:6px 12px;border-radius:6px;text-decoration:none;font-weight:500;font-size:13px;transition:all 0.3s ease;font-family:'Inter',sans-serif}
+.auth-btn:hover{background:rgba(255,255,255,0.25);transform:translateY(-1px)}
+
+/* USER MENU */
+.user-menu{display:none;align-items:center;gap:8px;cursor:pointer;padding:6px 12px;border-radius:20px;background:rgba(255,255,255,0.1);transition:all 0.3s ease;position:relative}
+.user-menu:hover{background:rgba(255,255,255,0.2)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:var(--main);font-weight:bold;font-size:14px}
+.user-name{font-size:14px;font-weight:500;color:white}
+.user-dropdown{position:absolute;top:100%;right:0;background:white;border-radius:8px;box-shadow:0 4px 20px rgba(0,0,0,0.15);padding:8px 0;min-width:180px;display:none;z-index:100;margin-top:5px}
+.user-dropdown.show{display:block}
+.user-dropdown a{display:flex;align-items:center;gap:10px;padding:10px 15px;color:var(--text);text-decoration:none;transition:background 0.3s ease;font-weight:500;font-family:'Inter',sans-serif}
+.user-dropdown a:hover{background:#f8f9fa}
+.user-dropdown a i{width:16px;text-align:center}
+
+.header-actions{display:flex;align-items:center;gap:12px}
+.header-actions img{width:28px;height:28px}
+
+.menu-button{display:flex;align-items:center;gap:8px;cursor:pointer}
+.menu-button a{color:#fff;text-decoration:none;font-weight:600;display:inline-flex;align-items:center;gap:8px;font-family:'Inter',sans-serif}
+
+.fullscreen-menu{position:fixed;inset:0;background:rgba(0,0,0,0.96);color:#fff;display:none;justify-content:center;align-items:center;z-index:2000;padding:40px;flex-direction:column;text-align:center}
+.fullscreen-menu .menu-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:18px;align-items:center}
+.fullscreen-menu .menu-list a{color:#fff;font-size:1.45rem;text-decoration:none;font-weight:500;font-family:'Inter',sans-serif}
+.fullscreen-menu .menu-close{position:absolute;top:20px;right:26px;font-size:2rem;color:#fff;text-decoration:none}
+:target.fullscreen-menu{display:flex}
+
+.top-to-top{position:fixed;right:18px;top:14px;z-index:135}
+.top-to-top button{width:44px;height:44px;border-radius:10px;border:0;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,0.12);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.top-to-top svg{width:20px;height:20px;fill:var(--main)}
+
+/* HERO SECTION */
+.hero{
+  background:linear-gradient(rgba(128,0,32,0.58),rgba(0,0,0,0.45)),
+    url("https://i.pinimg.com/originals/b7/50/5e/b7505e89658ffb331cfc6117209a7307.jpg") center/cover no-repeat;
+  min-height:68vh;display:flex;align-items:center;justify-content:center;color:#fff;text-align:center;padding:40px 20px;
+}
+.hero-inner{max-width:900px}
+.hero h1{font-size:3.2rem;margin:0 0 10px;text-shadow:2px 2px 10px rgba(0,0,0,0.65);font-weight:700;font-family:'Playfair Display',serif}
+.hero p{font-size:1.2rem;margin-bottom:18px;opacity:.95;font-weight:400;font-family:'Inter',sans-serif}
+.cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 20px;border-radius:12px;text-decoration:none;font-weight:600;background:var(--accent);color:var(--main);box-shadow:0 8px 20px rgba(248,210,16,0.08);transition:transform var(--ease);font-family:'Inter',sans-serif}
+.btn-dark{background:var(--main);color:#fff}
+.btn:hover{transform:translateY(-4px)}
+
+/* SECTIONS */
+section{padding:56px 0;border-bottom:1px solid rgba(0,0,0,0.03)}
+.section-title{color:var(--text);text-align:center;font-size:2.2rem;margin-bottom:18px;font-weight:600;font-family:'Playfair Display',serif}
+
+.video-wrapper{text-align:center}
+.video-wrapper img{width:100%;max-width:900px;border-radius:12px;display:block;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.08)}
+
+/* GALLERY */
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:1200px;margin:0 auto}
+.gallery-grid img{width:100%;height:170px;object-fit:cover;border-radius:10px;transition:transform .35s}
+.gallery-grid img:hover{transform:scale(1.03)}
+
+/* TOURS */
+.tours{display:flex;flex-wrap:wrap;gap:18px;justify-content:center;max-width:1200px;margin:0 auto}
+.tour{width:260px;background:var(--card);border-radius:14px;box-shadow:0 8px 26px rgba(0,0,0,0.08);overflow:hidden;transition:transform .25s}
+.tour img{width:100%;height:160px;object-fit:cover}
+.tour-body{padding:14px}
+.tour h3{margin:0;color:var(--text);font-size:1.1rem;font-weight:600;font-family:'Inter',sans-serif}
+.tour p{margin:8px 0;color:var(--muted);font-size:.95rem;font-weight:400;font-family:'Inter',sans-serif}
+.tour .price{font-weight:700;margin-top:8px;color:var(--text);font-family:'Inter',sans-serif}
+
+.details{max-width:1100px;margin:18px auto 0;background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 20px rgba(0,0,0,0.04)}
+.details p{margin:8px 0;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+
+/* BOOKING */
+.booking-wrapper{max-width:1100px;margin:0 auto;display:flex;align-items:stretch;gap:18px;justify-content:center;padding:8px}
+.booking-box{display:flex;gap:18px;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 26px rgba(0,0,0,0.08);border:2px solid rgba(128,0,32,0.06);width:100%;align-items:center;justify-content:space-between}
+.booking-form{flex:1;min-width:260px}
+.booking-form h3{color:var(--text);margin-top:0;font-weight:600;font-family:'Inter',sans-serif}
+.booking-form .row{display:flex;gap:10px}
+.booking-form input,.booking-form select{width:100%;padding:10px;margin-top:10px;border-radius:8px;border:1px solid #ddd;font-size:1rem;font-weight:400;font-family:'Inter',sans-serif}
+.book-btn{background:var(--main-2);color:#fff;border:none;padding:12px;border-radius:8px;cursor:pointer;margin-top:12px;width:100%;font-weight:600;font-family:'Inter',sans-serif}
+.book-btn:hover{background:var(--main)}
+
+.logo-square{width:260px;min-width:220px;background:linear-gradient(180deg,var(--main),var(--main-2));color:#fff;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:16px;box-shadow:0 10px 30px rgba(128,0,32,0.12);border:4px solid rgba(255,255,255,0.06)}
+.logo-square span{font-size:2.6rem;margin-top:8px;font-weight:600;font-family:'Playfair Display',serif}
+
+/* TEAM */
+.team-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1200px;margin:0 auto}
+.member{background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 8px 20px rgba(0,0,0,0.06);text-align:center;padding-bottom:14px}
+.member img{width:100%;height:220px;object-fit:cover}
+.member h4{color:var(--text);margin:12px 0 6px;font-weight:600;font-family:'Inter',sans-serif}
+.member p{margin:0 12px 12px;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+.member.kamila img{object-position:center 60%}
+
+.founders{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.founder{background:var(--card);padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.founder h3{color:var(--text);margin-bottom:8px;font-weight:600;font-family:'Inter',sans-serif}
+.founder p{color:var(--muted);line-height:1.6;font-weight:400;font-family:'Inter',sans-serif}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:1200px;margin:0 auto}
+.review-card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.review-card p{font-style:italic;color:#333;font-weight:400;font-family:'Inter',sans-serif}
+.review-meta{display:flex;justify-content:space-between;margin-top:10px;font-size:.9rem;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+
+.add-box{display:flex;flex-direction:column;gap:8px;align-items:flex-start;background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.05);max-width:520px;margin:16px auto}
+.add-box input,.add-box textarea{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd;font-size:1rem;font-weight:400;font-family:'Inter',sans-serif}
+.add-box button{background:var(--main);color:#fff;padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:600;font-family:'Inter',sans-serif}
+
+/* FAQ */
+.faq{max-width:900px;margin:0 auto}
+.faq-item{background:var(--card);padding:12px;border-radius:10px;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,0,0,0.04)}
+.faq-item summary{font-weight:600;cursor:pointer;color:var(--text);font-family:'Inter',sans-serif}
+.faq-item p{color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+
+.blog-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:1200px;margin:0 auto}
+.blog-card{background:var(--card);border-radius:12px;padding:14px;box-shadow:0 6px 18px rgba(0,0,0,0.05)}
+.blog-card h4{color:var(--text);font-weight:600;font-family:'Inter',sans-serif}
+.blog-card p{color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+
+/* AUTH SECTION STYLES */
+.auth-section{background:linear-gradient(135deg,var(--main) 0%,var(--main-2) 100%);color:white;padding:60px 0}
+.auth-container{max-width:500px;margin:0 auto;background:var(--card);border-radius:15px;padding:30px;box-shadow:0 15px 35px rgba(0,0,0,0.1)}
+.auth-tabs{display:flex;margin-bottom:30px;border-bottom:2px solid #eee}
+.auth-tab{flex:1;padding:15px;text-align:center;background:none;border:none;font-size:16px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.3s ease;font-family:'Inter',sans-serif}
+.auth-tab.active{color:var(--text);border-bottom:3px solid var(--main)}
+.auth-form{display:none}
+.auth-form.active{display:block}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:600;color:var(--text);font-family:'Inter',sans-serif}
+.form-group input{width:100%;padding:12px 15px;border:2px solid #e1e5ee;border-radius:8px;font-size:16px;transition:all 0.3s ease;font-weight:400;font-family:'Inter',sans-serif}
+.form-group input:focus{border-color:var(--main);outline:none;box-shadow:0 0 0 3px rgba(128,0,32,0.1)}
+.auth-btn{width:100%;padding:15px;background:var(--main);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;transition:all 0.3s ease;font-family:'Inter',sans-serif}
+.auth-btn:hover{background:var(--main-2);transform:translateY(-2px)}
+
+/* PROFILE SECTION */
+.profile-section{background:var(--bg);padding:40px 0}
+.profile-container{max-width:1000px;margin:0 auto;background:var(--card);border-radius:15px;padding:30px;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+.profile-header{display:flex;align-items:center;gap:20px;margin-bottom:30px;padding-bottom:20px;border-bottom:2px solid #eee}
+.profile-avatar{width:80px;height:80px;border-radius:50%;background:var(--main);display:flex;align-items:center;justify-content:center;color:white;font-size:32px;font-weight:600;font-family:'Inter',sans-serif}
+.profile-info h2{margin:0;color:var(--text);font-weight:600;font-family:'Inter',sans-serif}
+.profile-info p{margin:5px 0 0 0;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+.profile-tabs{display:flex;margin-bottom:30px;border-bottom:2px solid #eee;flex-wrap:wrap;gap:10px}
+.profile-tab{padding:12px 24px;background:none;border:none;font-size:16px;font-weight:600;color:var(--muted);cursor:pointer;transition:all 0.3s ease;border-bottom:3px solid transparent;border-radius:6px 6px 0 0;font-family:'Inter',sans-serif}
+.profile-tab.active{color:var(--text);border-bottom:3px solid var(--main);background:#f8f9fa}
+.profile-content{display:none}
+.profile-content.active{display:block}
+.ticket-history{background:#f8f9fa;padding:20px;border-radius:10px;margin-bottom:20px}
+.ticket-item{background:white;padding:15px;border-radius:8px;margin-bottom:15px;border-left:4px solid var(--main);box-shadow:0 2px 10px rgba(0,0,0,0.05)}
+.ticket-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.ticket-destination{font-weight:600;color:var(--text);font-size:18px;font-family:'Inter',sans-serif}
+.ticket-status{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif}
+.status-confirmed{background:#d4edda;color:#155724}
+.status-pending{background:#fff3cd;color:#856404}
+.ticket-details{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+.no-tickets{text-align:center;padding:40px;color:var(--muted)}
+.no-tickets i{font-size:48px;margin-bottom:15px;color:#ddd}
+.no-tickets h3{margin:0 0 10px 0;color:var(--text);font-weight:600;font-family:'Inter',sans-serif}
+.no-tickets p{margin:0;font-weight:400;font-family:'Inter',sans-serif}
+.profile-details .form-group input{background:#f8f9fa}
+.subscription-item{background:white;padding:20px;border-radius:8px;margin-bottom:15px;border:1px solid #e1e5ee}
+.subscription-item h4{margin:0 0 10px 0;color:var(--text);font-weight:600;font-family:'Inter',sans-serif}
+.subscription-item p{margin:0 0 15px 0;color:var(--muted);font-weight:400;font-family:'Inter',sans-serif}
+.subscribe-btn{background:var(--main);color:white;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:600;transition:all 0.3s ease;font-family:'Inter',sans-serif}
+.subscribe-btn:hover{background:var(--main-2)}
+.subscribe-btn.subscribed{background:var(--muted)}
+
+/* BOOKING TABLE */
+.export-btn{background:#28a745;color:white;border:none;padding:12px 20px;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;font-weight:600;transition:all 0.3s ease;font-family:'Inter',sans-serif;margin-top:20px}
+.export-btn:hover{background:#218838;transform:translateY(-2px)}
+.bookings-table{width:100%;border-collapse:collapse;margin-top:20px;background:var(--card);border-radius:12px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.bookings-table th,.bookings-table td{padding:12px 15px;text-align:left;border-bottom:1px solid #e1e5ee;font-family:'Inter',sans-serif}
+.bookings-table th{background:var(--main);color:white;font-weight:600;font-size:14px}
+.bookings-table tr:hover{background:#f8f9fa}
+.bookings-table-container{max-height:400px;overflow-y:auto;margin-top:20px;border-radius:12px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.booking-full-form{display:none;background:var(--card);padding:30px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.1);margin-top:20px}
+.booking-full-form.show{display:block}
+
+/* MAP SECTION */
+.map-wrap{max-width:1100px;margin:0 auto;border-radius:12px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,0.06)}
+iframe.map{width:100%;height:380px;border:0}
+.map-info{background:var(--card);padding:20px;border-radius:12px;margin-top:20px;box-shadow:0 4px 15px rgba(0,0,0,0.1)}
+.map-info h3{color:var(--text);margin-bottom:15px;font-weight:600;font-family:'Inter',sans-serif}
+.work-hours{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-top:15px}
+.hour-item{padding:10px;background:#f8f9fa;border-radius:6px}
+.hour-item strong{color:var(--text);font-weight:600}
+
+/* NOTIFICATION */
+.notification{position:fixed;top:20px;right:20px;background:#4cc9f0;color:white;padding:15px 25px;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.15);z-index:1000;transform:translateX(150%);transition:transform 0.3s ease;font-weight:500;font-family:'Inter',sans-serif}
+.notification.show{transform:translateX(0)}
+.notification.error{background:#f72585}
+
+footer{background:linear-gradient(90deg,var(--main),var(--main-2));color:#fff;padding:28px 0;text-align:center}
+footer p{font-weight:400;font-family:'Inter',sans-serif}
+
+.side-panel{position:fixed;right:18px;bottom:18px;display:flex;flex-direction:column;gap:10px;z-index:130}
+.side-btn{width:52px;height:52px;border-radius:12px;background:var(--card);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 30px rgba(0,0,0,0.12);cursor:pointer;border:0}
+.side-btn svg{width:26px;height:26px;display:block;fill:var(--main)}
+.side-btn:active{transform:scale(.98)}
+
+/* RESPONSIVE */
+@media (max-width:768px){
+  .header-inner{flex-direction:column;gap:10px}
+  .site-nav{display:none!important}
+  .header-auth{flex-direction:column;gap:8px;margin-left:0;width:100%;justify-content:center}
+  .auth-buttons{gap:5px;justify-content:center}
+  .auth-btn{padding:6px 12px;font-size:12px}
+  .user-menu .user-name{display:none}
+  .user-menu{padding:6px}
+  .container{padding:0 15px}
+  section{padding:40px 0}
+  .hero{min-height:50vh;padding:30px 15px}
+  .hero h1{font-size:2.2rem}
+  .hero p{font-size:1rem}
+  .cta-row{flex-direction:column}
+  .btn{width:100%;max-width:280px}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .tours{justify-content:center}
+  .tour{width:100%;max-width:300px}
+  .booking-box{flex-direction:column}
+  .logo-square{width:100%}
+  .team-grid{grid-template-columns:1fr}
+  .reviews-grid{grid-template-columns:1fr}
+  .blog-grid{grid-template-columns:1fr}
+  .profile-tabs{flex-direction:column}
+  .profile-tab{text-align:center;padding:12px}
+  .ticket-details{grid-template-columns:1fr}
+  .profile-header{flex-direction:column;text-align:center}
+  .bookings-table-container{overflow-x:auto}
+  .bookings-table{min-width:600px}
+  .founders{grid-template-columns:1fr}
+}
+
+@media (max-width:480px){
+  .hero h1{font-size:1.8rem}
+  .section-title{font-size:1.6rem}
+  .gallery-grid{grid-template-columns:1fr}
+}
+
+@media (max-width:1024px) and (min-width:769px){
+  .gallery-grid{grid-template-columns:repeat(3,1fr)}
+  .team-grid{grid-template-columns:repeat(2,1fr)}
+  .reviews-grid{grid-template-columns:repeat(2,1fr)}
+  .blog-grid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+
+<body>
+
+<header role="banner" aria-label="Верх сайта">
+  <div class="container header-inner">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <div class="logo">Asia <span>Airlines</span></div>
+      <div class="menu-button" aria-hidden="false" style="margin-left:10px;">
+        <a href="#menu" title="Открыть меню" aria-label="Открыть меню">☰ Меню</a>
+      </div>
+    </div>
+
+    <nav class="site-nav" aria-label="Основная навигация">
+      <a href="#home">Главная</a>
+      <a href="#about">О компании</a>
+      <a href="#tours">Горячие туры</a>
+      <a href="#gallery">Галерея</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#faq">Вопросы</a>
+      <a href="#contacts">Контакты</a>
+      <a href="#order">Заказать</a>
+    </nav>
+
+    <div class="header-auth">
+      <div class="auth-buttons" id="authButtons">
+        <a href="#auth" class="auth-btn" onclick="showAuthSection()">Вход</a>
+        <a href="#auth" class="auth-btn" onclick="showAuthSection()">Регистрация</a>
+      </div>
+
+      <div class="user-menu" id="userMenu">
+        <div class="user-avatar" id="userAvatar">
+          <i class="fas fa-user"></i>
+        </div>
+        <div class="user-name" id="userName">Пользователь</div>
+        <div class="user-dropdown" id="userDropdown">
+          <a href="#profile" onclick="showProfileSection()">
+            <i class="fas fa-user"></i>
+            Личный кабинет
+          </a>
+          <a href="#" onclick="showProfileTab('subscriptions')">
+            <i class="fas fa-bell"></i>
+            Подписки
+          </a>
+          <a href="#" onclick="showProfileTab('tickets')">
+            <i class="fas fa-ticket-alt"></i>
+            История билетов
+          </a>
+          <a href="#" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Выйти
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions" aria-hidden="true">
+      <a href="#" aria-label="Instagram" title="Instagram"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111423.png" alt="Instagram"></a>
+      <a href="#" aria-label="VK" title="VK"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111406.png" alt="VK"></a>
+      <a href="#" aria-label="Telegram" title="Telegram"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111646.png" alt="Telegram"></a>
+      <a href="#" aria-label="WhatsApp" title="WhatsApp"><img src="https://cdn-icons-png.flaticon.com/512/733/733585.png" alt="WhatsApp"></a>
+    </div>
+  </div>
+</header>
+
+<div id="notification" class="notification"></div>
+
+<div id="menu" class="fullscreen-menu" role="dialog" aria-modal="true" aria-label="Полноэкранное меню">
+  <a href="#home" class="menu-close" aria-label="Закрыть меню">✕</a>
+  <ul class="menu-list" role="menu" aria-hidden="false">
+    <li role="none"><a role="menuitem" href="#home">Главная</a></li>
+    <li role="none"><a role="menuitem" href="#about">О компании</a></li>
+    <li role="none"><a role="menuitem" href="#tours">Горячие туры</a></li>
+    <li role="none"><a role="menuitem" href="#gallery">Фотогалерея</a></li>
+    <li role="none"><a role="menuitem" href="#reviews">Отзывы</a></li>
+    <li role="none"><a role="menuitem" href="#auth">Вход/Регистрация</a></li>
+    <li role="none"><a role="menuitem" href="#faq">FAQ</a></li>
+    <li role="none"><a role="menuitem" href="#contacts">Контакты</a></li>
+    <li role="none"><a role="menuitem" href="#order">Заказать</a></li>
+  </ul>
+</div>
+
+<div class="top-to-top" aria-hidden="false">
+  <a href="#home" title="Наверх" aria-label="Наверх" style="display:inline-block;width:44px;height:44px;border-radius:10px;background:var(--card);box-shadow:0 6px 18px rgba(0,0,0,0.12);display:flex;align-items:center;justify-content:center">
+    <svg viewBox="0 0 24 24" aria-hidden="true" style="width:20px;height:20px;fill:var(--main)"><path d="M12 4l-8 8h6v8h4v-8h6z"/></svg>
+  </a>
+</div>
+
+<section id="home" class="hero" role="region" aria-label="Приветственная секция">
+  <div class="hero-inner">
+    <h1>Asia Airlines</h1>
+    <p>Путешествия, которые вдохновляют. Комфортные перелёты, надёжные туры и уникальные маршруты по Азии и миру.</p>
+    <div class="cta-row" role="group" aria-label="Основные действия">
+      <a href="#order" class="btn" aria-label="Забронировать билет">✈ Забронировать билет</a>
+      <a href="#tours" class="btn btn-dark" aria-label="Посмотреть горячие туры">🔥 Горячие туры</a>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap">
+      <div class="badge" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 12px;border-radius:20px;font-weight:600">Гарантия лучшей цены</div>
+      <div class="badge" style="background:rgba(255,255,255,0.08);color:#fff;padding:8px 12px;border-radius:20px;font-weight:600">Поддержка 24/7</div>
+    </div>
+  </div>
+</section>
+
+<section id="auth" class="auth-section" role="region" aria-label="Система регистрации и входа">
+  <div class="container">
+    <h2 class="section-title" style="color: white;">Вход в систему</h2>
+    <div class="auth-container">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="showAuthForm('login')">Вход</button>
+        <button class="auth-tab" onclick="showAuthForm('register')">Регистрация</button>
+      </div>
+      <form id="loginForm" class="auth-form active">
+        <div class="form-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" id="loginEmail" required placeholder="Введите ваш email">
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Пароль</label>
+          <input type="password" id="loginPassword" required placeholder="Введите ваш пароль">
+        </div>
+        <button type="submit" class="auth-btn">Войти в систему</button>
+      </form>
+      <form id="registerForm" class="auth-form">
+        <div class="form-group">
+          <label for="regName">Имя</label>
+          <input type="text" id="regName" required placeholder="Введите ваше имя">
+        </div>
+        <div class="form-group">
+          <label for="regEmail">Email</label>
+          <input type="email" id="regEmail" required placeholder="Введите ваш email">
+        </div>
+        <div class="form-group">
+          <label for="regPassword">Пароль</label>
+          <input type="password" id="regPassword" required placeholder="Создайте пароль">
+        </div>
+        <div class="form-group">
+          <label for="regConfirmPassword">Подтверждение пароля</label>
+          <input type="password" id="regConfirmPassword" required placeholder="Повторите пароль">
+        </div>
+        <button type="submit" class="auth-btn">Зарегистрироваться</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<section id="profile" class="profile-section" role="region" aria-label="Личный кабинет" style="display: none;">
+  <div class="container">
+    <h2 class="section-title">Личный кабинет</h2>
+    <div class="profile-container">
+      <div class="profile-header">
+        <div class="profile-avatar" id="profileAvatar">U</div>
+        <div class="profile-info">
+          <h2 id="profileUserName">Пользователь</h2>
+          <p id="profileUserEmail">email@example.com</p>
+        </div>
+      </div>
+      <div class="profile-tabs">
+        <button class="profile-tab active" onclick="showProfileTab('tickets')">История билетов</button>
+        <button class="profile-tab" onclick="showProfileTab('profile')">Мой профиль</button>
+        <button class="profile-tab" onclick="showProfileTab('subscriptions')">Подписки</button>
+      </div>
+      <div id="ticketsTab" class="profile-content active">
+        <h3 style="color: var(--text); margin-bottom: 20px; font-weight: 600;">История ваших билетов</h3>
+        <div class="ticket-history">
+          <div id="ticketsList"></div>
+        </div>
+      </div>
+      <div id="profileTab" class="profile-content">
+        <h3 style="color: var(--text); margin-bottom: 20px; font-weight: 600;">Мой профиль</h3>
+        <div class="profile-details">
+          <div class="form-group">
+            <label>Имя</label>
+            <input type="text" id="profileName" readonly>
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="profileEmail" readonly>
+          </div>
+          <div class="form-group">
+            <label>Дата регистрации</label>
+            <input type="text" id="profileRegDate" readonly>
+          </div>
+        </div>
+      </div>
+      <div id="subscriptionsTab" class="profile-content">
+        <h3 style="color: var(--text); margin-bottom: 20px; font-weight: 600;">Мои подписки</h3>
+        <div class="subscription-item">
+          <h4>💌 Рассылка новостей</h4>
+          <p>Получайте уведомления о новых турах и акциях</p>
+          <button class="subscribe-btn" onclick="toggleSubscription(this)">Подписаться</button>
+        </div>
+        <div class="subscription-item">
+          <h4>🔔 Уведомления о скидках</h4>
+          <p>Специальные предложения для подписчиков</p>
+          <button class="subscribe-btn" onclick="toggleSubscription(this)">Подписаться</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="lead-slide" role="region" aria-label="Основной слайд после главной">
+  <div style="background-image:url('https://i.pinimg.com/originals/b7/50/5e/b7505e89658ffb331cfc6117209a7307.jpg');background-size:cover;background-position:center;padding:60px 20px;color:#fff;text-align:center;">
+    <div style="max-width:1000px;margin:0 auto;">
+      <h2 style="font-size:2rem;margin-bottom:8px;text-shadow:2px 2px 8px rgba(0,0,0,0.5);font-weight:600;">Откройте мир с нами</h2>
+      <p style="opacity:.95;margin-bottom:12px;font-weight:400;">Удобные перелёты, проверенные отели и индивидуальный подход. Спланируем любое путешествие — от короткого уикенда до продолжительных туров.</p>
+      <a href="#tours" class="btn btn-dark">Посмотреть туры</a>
+    </div>
+  </div>
+</section>
+
+<section id="video-section" role="region" aria-label="Видео о путешествиях">
+  <div class="container">
+    <h2 class="section-title">Наслаждайтесь атмосферой путешествий</h2>
+    <div class="video-wrapper">
+      <img src="https://us.v-cdn.net/5021879/uploads/editor/ir/5uapco8xomd0.gif" alt="Атмосфера путешествий — анимация">
+    </div>
+    <div class="details">
+      <h3 style="color: var(--text); font-weight: 600;">Почему клиенты выбирают нас</h3>
+      <p>Asia Airlines — это сочетание комфортного сервиса, прозрачных цен и индивидуального подхода. Мы предлагаем удобные стыковки, проверенные отели, гибкие условия обмена и возврата билетов, а также поддержку на всех этапах путешествия.</p>
+      <p>Наши менеджеры подберут лучший маршрут и помогут оформить визу и страховку при необходимости.</p>
+      <div style="margin-top:12px" class="why-list" aria-hidden="false">
+        <div class="why-item">
+          <div class="why-number">1</div>
+          <div class="why-text">Прозрачные цены и выгодные предложения</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">2</div>
+          <div class="why-text">Поддержка 24/7 — до и после бронирования</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">3</div>
+          <div class="why-text">Проверенные партнёры и отели</div>
+        </div>
+        <div class="why-item">
+          <div class="why-number">4</div>
+          <div class="why-text">Гарантии и страхование поездок</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="gallery" role="region" aria-label="Фотогалерея">
+  <div class="container">
+    <h2 class="section-title">Фотогалерея</h2>
+    <div class="gallery-grid" role="list">
+      <img role="listitem" src="https://i.pinimg.com/736x/46/db/d7/46dbd7f9c2717ac0d3a2881dbbba63cf.jpg" alt="Фото 1 — авиация">
+      <img role="listitem" src="https://kakogo-chisla.ru/wp-content/uploads/2022/04/Pochemu-vazhen-Mezhdunarodnyj-den-grazhdanskoj-aviatsii-2048x1152.jpg" alt="Фото 2 — аэропорт">
+      <img role="listitem" src="https://avatars.mds.yandex.net/i?id=282095a10a0d5afc83bf09081061ae9f_l-5209846-images-thumbs&n=13" alt="Фото 3 — самолет">
+      <img role="listitem" src="https://avatars.mds.yandex.net/i?id=db6dfabfbab4867305a97bdc53860a92_l-6950859-images-thumbs&n=13" alt="Фото 4 — виды">
+    </div>
+    <p style="text-align:center;margin-top:14px;color:var(--muted);font-weight:400;">Оставлены только уникальные фотографии — без повторов.</p>
+  </div>
+</section>
+
+<section id="tours" role="region" aria-label="Горячие туры">
+  <div class="container">
+    <h2 class="section-title">Горячие туры</h2>
+    <div class="tours" role="list">
+      <article class="tour" role="listitem" aria-label="Тур: Сеул">
+        <img src="https://avatars.mds.yandex.net/i?id=4964d506d31c241efd392c895d5e1828_l-9245471-images-thumbs&n=13" alt="Тур в Сеул">
+        <div class="tour-body">
+          <h3>Сеул — 7 дней</h3>
+          <p>Культурный центр Кореи: музеи, улицы Инсадон и современные небоскрёбы.</p>
+          <div class="price">от 299 000 ₸</div>
+        </div>
+      </article>
+      <article class="tour" role="listitem" aria-label="Тур: Бангкок">
+        <img src="https://avatars.mds.yandex.net/i?id=0d4756581f229f5825ba4040cae80287_l-4402845-images-thumbs&n=13" alt="Тур в Бангкок">
+        <div class="tour-body">
+          <h3>Бангкок — 6 дней</h3>
+          <p>Экзотика, храмы, уличная еда и плавучие рынки.</p>
+          <div class="price">от 269 000 ₸</div>
+        </div>
+      </article>
+      <article class="tour" role="listitem" aria-label="Тур: Япония">
+        <img src="https://cdn.culture.ru/images/16445445-ffab-500b-852d-561f37f40877" alt="Тур в Японию">
+        <div class="tour-body">
+          <h3>Япония — 10 дней</h3>
+          <p>Токио, Киото, храмы и современные технологии.</p>
+          <div class="price">от 599 000 ₸</div>
+        </div>
+      </article>
+      <article class="tour" role="listitem" aria-label="Тур: Тайланд">
+        <img src="https://i.pinimg.com/736x/56/4f/2d/564f2db1fd6f7b4a00d2130a002ed1e5.jpg" alt="Тур в Тайланд">
+        <div class="tour-body">
+          <h3>Тайланд — 8 дней</h3>
+          <p>Райские пляжи, SPA, острова и морские прогулки.</p>
+          <div class="price">от 349 000 ₸</div>
+        </div>
+      </article>
+    </div>
+    <div class="details">
+      <h3 style="color: var(--text); font-weight: 600;">Детали горячих туров</h3>
+      <p>Горячие туры формируются по принципу лучших комбинаций перелёт+отель+трансфер. Цены динамичные — уточняйте перед бронированием.</p>
+    </div>
+  </div>
+</section>
+
+<section id="order" role="region" aria-label="Бронирование билета">
+  <div class="container">
+    <h2 class="section-title">Бронирование билета</h2>
+    <div class="booking-wrapper">
+      <div class="booking-box" role="group" aria-label="Бокс бронирования">
+        <div class="booking-form" aria-label="Форма бронирования">
+          <h3>Начните бронирование</h3>
+          <p style="color: var(--muted); margin-bottom: 20px;">Нажмите кнопку ниже, чтобы открыть полную форму бронирования</p>
+          <button type="button" class="book-btn" onclick="showBookingForm()">✈ Открыть форму бронирования</button>
+        </div>
+        <div class="logo-square" aria-hidden="true">
+          <div style="font-weight:700;font-size:1.1rem">Asia</div>
+          <span>Airlines ✈</span>
+          <div style="font-size:.85rem;margin-top:8px;color:rgba(255,255,255,0.9);font-weight:400;">Комфорт. Доверие. Путешествия</div>
+        </div>
+      </div>
+    </div>
+    <div id="bookingFullForm" class="booking-full-form">
+      <h3 style="color: var(--text); margin-bottom: 20px; font-weight: 600;">Форма бронирования</h3>
+      <form id="bookingForm" action="#" method="post" style="display:flex;flex-direction:column;gap:15px">
+        <div style="display: flex; gap: 15px;">
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Ваше имя</label>
+            <input type="text" name="fullname" placeholder="Введите ваше имя" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+          </div>
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Email</label>
+            <input type="email" name="email" placeholder="Введите ваш email" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Город</label>
+            <input type="text" name="city" placeholder="Введите ваш город" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+          </div>
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Направление</label>
+            <select name="direction" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+              <option value="">Выберите направление</option>
+              <option>Сеул</option>
+              <option>Бангкок</option>
+              <option>Япония</option>
+              <option>Тайланд</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: flex; gap: 15px;">
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Дата вылета</label>
+            <input type="date" name="date" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+          </div>
+          <div style="flex: 1;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Количество пассажиров</label>
+            <input type="number" name="seats" placeholder="Кол-во" min="1" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #ddd;">
+          </div>
+        </div>
+        <button type="submit" class="book-btn" style="width: 100%; margin-top: 10px;">Забронировать</button>
+      </form>
+    </div>
+    <div style="text-align: center; margin-top: 40px;">
+      <button class="export-btn" onclick="exportBookingsToExcel()">
+        <i class="fas fa-file-excel"></i> Экспорт бронирований в Excel
+      </button>
+    </div>
+    <div class="bookings-table-container">
+      <table class="bookings-table">
+        <thead>
+          <tr>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Город</th>
+            <th>Направление</th>
+            <th>Дата</th>
+            <th>Пассажиры</th>
+            <th>Время бронирования</th>
+          </tr>
+        </thead>
+        <tbody id="bookingsTableBody"></tbody>
+      </table>
+    </div>
+    <div style="max-width:1100px;margin:18px auto;color:var(--muted)">
+      <h3 style="color: var(--text); font-weight: 600;">Условия бронирования</h3>
+      <ul style="margin-left:18px;color:var(--muted);font-weight:400;">
+        <li>Бронирование подтверждается после платежа.</li>
+        <li>Бесплатная отмена в течение 24 часов (если применимо к тарифу).</li>
+        <li>Поддержка 24/7 — мы поможем с изменениями в маршруте.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="team" role="region" aria-label="Наша команда">
+  <div class="container">
+    <h2 class="section-title">Наша команда</h2>
+    <div class="team-grid" role="list">
+      <div class="member" role="listitem" aria-label="Нургуль — Менеджер по клиентам">
+        <img src="https://kubnews.ru/upload/resize_cache/iblock/882/1200_800_2/6rk29dt7951asmo82ifjzhdsapswjw80.jpg" alt="Нургуль — менеджер">
+        <h4>Нургуль</h4>
+        <p>Менеджер по клиентам — направляет запросы, помогает с визой и решает организационные вопросы. Опыт работы с туристами: 6 лет.</p>
+      </div>
+      <div class="member" role="listitem" aria-label="Алина — Руководитель отдела продаж">
+        <img src="https://avatars.mds.yandex.net/get-shedevrum/12370558/0000aa7232d411eea5441282c0ba7723/orig" alt="Алина — руководитель отдела продаж">
+        <h4>Алина</h4>
+        <p>Руководитель отдела продаж — формирует выгодные турпакеты и следит за качеством предложений.</p>
+      </div>
+      <div class="member" role="listitem" aria-label="Али — Главный пилот">
+        <img src="https://i2.wp.com/assets.paramountbusinessjets.com/media/uploaded-files/Pilot-salary-04.jpg" alt="Али — главный пилот">
+        <h4>Али</h4>
+        <p>Главный пилот — отвечает за безопасность перелётов и обучение экипажа.</p>
+      </div>
+      <div class="member kamila" role="listitem" aria-label="Камила — Директор компании">
+        <img src="https://i.pinimg.com/736x/29/68/00/296800cff9e22e38124f0b4749ac209e.jpg" alt="Камила — директор">
+        <h4>Камила</h4>
+        <p>Директор компании — стратег и лидер компании. Вдохновляет команду и движет развитие бренда.</p>
+      </div>
+    </div>
+    <div style="margin-top:16px;max-width:1100px;margin-left:auto;margin-right:auto;color:var(--muted);font-weight:400;">
+      <p>Наша команда — профессионалы в авиации и туризме, которые помогут вам на каждом этапе путешествия.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contacts" class="map-section" role="region" aria-label="Контакты и карта">
+  <div class="container">
+    <h2 class="section-title">Наш офис в Астане</h2>
+    <div class="map-container">
+      <iframe 
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2503.098239238722!2d71.40939431575584!3d51.12897997957438!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4245841c1e7d93e7%3A0x29e59d6b5f5b5b5b!2z0JHQsNC50YLQtdC60LA!5e0!3m2!1sru!2skz!4v1650000000000!5m2!1sru!2skz" 
+        width="100%" 
+        height="400" 
+        style="border:0;" 
+        allowfullscreen="" 
+        loading="lazy" 
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Карта расположения нашего офиса возле Байтерека в Астане">
+      </iframe>
+    </div>
+    <div class="map-info">
+      <h3>Адрес и график работы</h3>
+      <p><strong>Адрес:</strong> г. Астана, район Байтерека</p>
+      <p><strong>Телефон:</strong> +7 (7172) 123-456</p>
+      <p><strong>Email:</strong> info@asia-airlines.kz</p>
+      <div class="work-hours">
+        <div class="hour-item">
+          <strong>Понедельник - Пятница:</strong><br>
+          9:00 - 18:00
+        </div>
+        <div class="hour-item">
+          <strong>Суббота:</strong><br>
+          10:00 - 16:00
+        </div>
+        <div class="hour-item">
+          <strong>Воскресенье:</strong><br>
+          Выходной
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>&copy; 2024 Asia Airlines. Все права защищены.</p>
+  </div>
+</footer>
+
+<div class="side-panel">
+  <button class="side-btn" aria-label="Быстрые действия" title="Быстрые действия">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+  </button>
+</div>
+
+<script>
+// USER MANAGEMENT SYSTEM
+let users = JSON.parse(localStorage.getItem('asiaAirlinesUsers')) || [];
+let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+let bookings = JSON.parse(localStorage.getItem('asiaAirlinesBookings')) || [];
+
+// INITIALIZATION
+document.addEventListener('DOMContentLoaded', function() {
+    updateUI();
+    setupEventListeners();
+    loadSampleData();
+});
+
+function setupEventListeners() {
+    // Auth forms
+    document.getElementById('loginForm').addEventListener('submit', handleLogin);
+    document.getElementById('registerForm').addEventListener('submit', handleRegister);
+    document.getElementById('bookingForm').addEventListener('submit', handleBooking);
+    
+    // User menu
+    document.getElementById('userMenu').addEventListener('click', function(e) {
+        e.stopPropagation();
+        document.getElementById('userDropdown').classList.toggle('show');
+    });
+    
+    // Close dropdowns
+    document.addEventListener('click', function() {
+        document.getElementById('userDropdown').classList.remove('show');
+    });
+}
+// NOTIFICATION SYSTEM
+function showNotification(message, type = 'success') {
+    const notification = document.getElementById('notification');
+    notification.textContent = message;
+    notification.className = 'notification';
+    notification.classList.add(type);
+    notification.classList.add('show');
+    
+    setTimeout(() => {
+        notification.classList.remove('show');
+    }, 3000);
+}
+
+// AUTH FUNCTIONS
+function showAuthForm(formType) {
+    document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+    document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(formType + 'Form').classList.add('active');
+    event.target.classList.add('active');
+}
+
+function showAuthSection() {
+    document.getElementById('auth').style.display = 'block';
+    window.scrollTo({ top: document.getElementById('auth').offsetTop, behavior: 'smooth' });
+}
+
+function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    const user = users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        user.lastLogin = new Date().toLocaleString('ru-RU');
+        localStorage.setItem('currentUser', JSON.stringify(currentUser));
+        localStorage.setItem('asiaAirlinesUsers', JSON.stringify(users));
+        
+        showNotification('Вход выполнен успешно!');
+        updateUI();
+        e.target.reset();
+        document.getElementById('auth').style.display = 'none';
+        showProfileSection();
+    } else {
+        showNotification('Неверный email или пароль!', 'error');
+    }
+}
+
+function handleRegister(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    
+    if (password !== confirmPassword) {
+        showNotification('Пароли не совпадают!', 'error');
+        return;
+    }
+    
+    if (users.find(user => user.email === email)) {
+        showNotification('Пользователь с таким email уже существует!', 'error');
+        return;
+    }
+    
+    const user = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        password: password,
+        registrationDate: new Date().toLocaleString('ru-RU'),
+        lastLogin: new Date().toLocaleString('ru-RU')
+    };
+    
+    users.push(user);
+    localStorage.setItem('asiaAirlinesUsers', JSON.stringify(users));
+    showNotification('Регистрация прошла успешно! Теперь вы можете войти.');
+    showAuthForm('login');
+    e.target.reset();
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('currentUser');
+    showNotification('Вы вышли из системы');
+    updateUI();
+    document.getElementById('profile').style.display = 'none';
+    document.getElementById('auth').style.display = 'block';
+    hideUserDropdown();
+}
+
+// UI MANAGEMENT
+function updateUI() {
+    const authButtons = document.getElementById('authButtons');
+    const userMenu = document.getElementById('userMenu');
+    const userAvatar = document.getElementById('userAvatar');
+    const userName = document.getElementById('userName');
+    const profileAvatar = document.getElementById('profileAvatar');
+    const profileUserName = document.getElementById('profileUserName');
+    const profileUserEmail = document.getElementById('profileUserEmail');
+    
+    if (currentUser) {
+        authButtons.style.display = 'none';
+        userMenu.style.display = 'flex';
+        userAvatar.innerHTML = currentUser.name.charAt(0).toUpperCase();
+        userName.textContent = currentUser.name;
+        profileAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+        profileUserName.textContent = currentUser.name;
+        profileUserEmail.textContent = currentUser.email;
+        document.getElementById('profileName').value = currentUser.name;
+        document.getElementById('profileEmail').value = currentUser.email;
+        document.getElementById('profileRegDate').value = currentUser.registrationDate;
+        loadUserTickets();
+    } else {
+        authButtons.style.display = 'flex';
+        userMenu.style.display = 'none';
+    }
+    updateBookingsTable();
+}
+
+function hideUserDropdown() {
+    document.getElementById('userDropdown').classList.remove('show');
+}
+
+function showProfileSection() {
+    document.getElementById('auth').style.display = 'none';
+    document.getElementById('profile').style.display = 'block';
+    hideUserDropdown();
+    window.scrollTo({ top: document.getElementById('profile').offsetTop, behavior: 'smooth' });
+}
+
+function showProfileTab(tabName) {
+    document.querySelectorAll('.profile-content').forEach(tab => tab.classList.remove('active'));
+    document.querySelectorAll('.profile-tab').forEach(tab => tab.classList.remove('active'));
+    document.getElementById(tabName + 'Tab').classList.add('active');
+    event.target.classList.add('active');
+    hideUserDropdown();
+}
+
+function loadUserTickets() {
+    const ticketsList = document.getElementById('ticketsList');
+    const userTickets = bookings.filter(booking => booking.userId === currentUser.id);
+    
+    if (userTickets.length === 0) {
+        ticketsList.innerHTML = `
+            <div class="no-tickets">
+                <i class="fas fa-ticket-alt"></i>
+                <h3>У вас пока нет билетов</h3>
+                <p>Забронируйте свой первый полёт!</p>
+                <a href="#order" class="btn" style="margin-top: 15px;">Забронировать билет</a>
+            </div>
+        `;
+        return;
+    }
+    
+    ticketsList.innerHTML = userTickets.map(ticket => `
+        <div class="ticket-item">
+            <div class="ticket-header">
+                <div class="ticket-destination">${ticket.direction}</div>
+                <div class="ticket-status status-confirmed">Подтвержден</div>
+            </div>
+            <div class="ticket-details">
+                <div><strong>Дата:</strong> ${ticket.date}</div>
+                <div><strong>Пассажиры:</strong> ${ticket.passengers}</div>
+                <div><strong>Город:</strong> ${ticket.city}</div>
+                <div><strong>Бронирование:</strong> ${ticket.timestamp}</div>
+            </div>
+        </div>
+    `).join('');
+}
+
+// BOOKING SYSTEM
+function showBookingForm() {
+    if (!currentUser) {
+        showNotification('Пожалуйста, войдите в систему для бронирования', 'error');
+        showAuthSection();
+        return;
+    }
+    
+    const form = document.getElementById('bookingFullForm');
+    form.classList.add('show');
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function handleBooking(e) {
+    e.preventDefault();
+    
+    if (!currentUser) {
+        showNotification('Пожалуйста, войдите в систему для бронирования', 'error');
+        showAuthSection();
+        return;
+    }
+    
+    const formData = new FormData(e.target);
+    const booking = {
+        id: Date.now(),
+        userId: currentUser.id,
+        name: formData.get('fullname'),
+        email: formData.get('email'),
+        city: formData.get('city'),
+        direction: formData.get('direction'),
+        date: formData.get('date'),
+        passengers: formData.get('seats'),
+        timestamp: new Date().toLocaleString('ru-RU')
+    };
+    
+    bookings.push(booking);
+    localStorage.setItem('asiaAirlinesBookings', JSON.stringify(bookings));
+    
+    showNotification('Бронирование успешно создано!');
+    e.target.reset();
+    updateBookingsTable();
+    loadUserTickets();
+}
+
+function updateBookingsTable() {
+    const tableBody = document.getElementById('bookingsTableBody');
+    tableBody.innerHTML = bookings.map(booking => `
+        <tr>
+            <td>${booking.name}</td>
+            <td>${booking.email}</td>
+            <td>${booking.city}</td>
+            <td>${booking.direction}</td>
+            <td>${booking.date}</td>
+            <td>${booking.passengers}</td>
+            <td>${booking.timestamp}</td>
+        </tr>
+    `).join('');
+}
+
+// SUBSCRIPTION SYSTEM
+function toggleSubscription(button) {
+    if (button.textContent === 'Подписаться') {
+        button.textContent = 'Отписаться';
+        button.classList.add('subscribed');
+        showNotification('Вы успешно подписались!');
+    } else {
+        button.textContent = 'Подписаться';
+        button.classList.remove('subscribed');
+        showNotification('Вы отписались от рассылки');
+    }
+}
+
+// EXPORT FUNCTIONALITY
+function exportBookingsToExcel() {
+    if (bookings.length === 0) {
+        showNotification('Нет данных для экспорта', 'error');
+        return;
+    }
+    
+    const excelData = bookings.map(booking => ({
+        'Имя': booking.name,
+        'Email': booking.email,
+        'Город': booking.city,
+        'Направление': booking.direction,
+        'Дата': booking.date,
+        'Пассажиры': booking.passengers,
+        'Время бронирования': booking.timestamp
+    }));
+    
+    const wb = XLSX.utils.book_new();
+    const ws = XLSX.utils.json_to_sheet(excelData);
+    XLSX.utils.book_append_sheet(wb, ws, 'Бронирования Asia Airlines');
+    XLSX.writeFile(wb, 'asia_airlines_bookings.xlsx');
+    showNotification('Данные экспортированы в Excel');
+}
+
+// SMOOTH SCROLLING
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>
